@@ -128,6 +128,9 @@ namespace IDS_School.Models
         public string Description { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime CreatedDate { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ClosureDate { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -151,7 +154,7 @@ namespace IDS_School.Models
         public int Id { get; set; }
         public string Content { get; set; }
 
-        public Boolean isAnoymous { get; set; }
+        public Boolean IsAnoymousComment { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CreatedDate { get; set; }
@@ -186,7 +189,7 @@ namespace IDS_School.Models
     {
         public int Id { get;  set; }
         public string Content { get; set; }
-        public Boolean isAnoymous { get; set; }
+        public Boolean IsAnoymousReply { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CreatedDate { get; set; }

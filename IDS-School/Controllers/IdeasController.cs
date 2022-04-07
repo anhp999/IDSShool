@@ -312,7 +312,7 @@ namespace IDS_School.Controllers
                 newComment.UserId = user;
                 newComment.CreatedDate = DateTime.Now;
                 newComment.LastModifiedDate = DateTime.Now;
-                newComment.isAnoymous = isAnoymous;
+                newComment.IsAnoymousComment = isAnoymous;
 
                 _context.Add(newComment);
                 await _context.SaveChangesAsync();
@@ -333,7 +333,7 @@ namespace IDS_School.Controllers
                 newReplyComment.UserId = user;
                 newReplyComment.CreatedDate = DateTime.Now;
                 newReplyComment.LastModifiedDate = DateTime.Now;
-                newReplyComment.isAnoymous = isAnoymous;
+                newReplyComment.IsAnoymousReply = isAnoymous;
 
                 _context.Add(newReplyComment);
                 await _context.SaveChangesAsync();

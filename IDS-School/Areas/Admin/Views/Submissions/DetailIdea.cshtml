@@ -8,7 +8,9 @@
     var anoyid = ViewData["anonymousId"];
     var comments = (List<Comment>)ViewData["comments"];
     var replies = (List<Reply>)ViewData["replies"];
-    
+    var filePath = ViewData["filePath"];
+    var fileId = ViewData["fileId"];
+
 }
 
 <div class="content-wrapper">
@@ -52,10 +54,10 @@
                 File
             </dt>
             <dd class="col-sm-10">
-                <a href="~/_Files/Ideas/@Model.SubmissionId" download>
-                    @*@file.Split('\\').Last()*@
-                    @*@file.Split("\\").Last()*@
+                 <a asp-action="DownloadFile" asp-route-fileId="@fileId">
+                    @filePath
                 </a>
+
             </dd>
         </dl>
         <div>
@@ -74,7 +76,7 @@
             <ul class="products-list product-list-in-card pl-2 pr-2">
                 @foreach (var comment in comments)
                 {
-                    @if (comment.isAnoymous == true)
+                    @if (comment.IsAnoymousComment == true)
                     {
                         <li class="item">
                             <span class="product-description">@comment.Content - posted by @anoyid @comment.CreatedDate</span>
@@ -101,7 +103,7 @@
                         </li>
                         @foreach (var reply in comment.Replies)
                         {
-                            @if (reply.isAnoymous == true)
+                            @if (reply.IsAnoymousReply == true)
                             {
                                 <li class="item">
                                     <span class="product-description">reply to @reply.Comment.User.Email:  @reply.Content - by anoymous @reply.CreatedDate</span>
@@ -143,7 +145,7 @@
                         </li>
                         @foreach (var reply in comment.Replies)
                         {
-                            @if (reply.isAnoymous == true)
+                            @if (reply.IsAnoymousReply == true)
                             {
                                 <li class="item">
                                     <span class="product-description">reply to @reply.Comment.User.Email:  @reply.Content - by anoymous @reply.CreatedDate</span>

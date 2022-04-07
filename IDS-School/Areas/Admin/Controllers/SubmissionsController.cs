@@ -1,19 +1,22 @@
-﻿using IDS_School.Data;
+﻿using Aspose.Words;
+using IDS_School.Data;
 using IDS_School.Models;
+using IDS_School.Service;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis;
+//using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 //using System.IO.Compression;
 using System.Linq;
+using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading.Tasks;
-
+using Comment = IDS_School.Models.Comment;
 
 namespace IDS_School.Areas.Admin.Controllers
 {
@@ -34,64 +37,20 @@ namespace IDS_School.Areas.Admin.Controllers
             return View(await _context.Submissions.ToListAsync());
         }
 
-        // GET: SubmissionsController/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    return View();
-        //}
-
-        //// GET: Admin/Submissions/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var submission = await _context.Submissions
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (submission == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(submission);
-        //}
-        public int pageSize = 2;
 
         // GET: SubmissionsController/Details/5
-        public async Task<IActionResult> Details(int? id, int? page)
+        public IActionResult Details(int? id, int? pageNumber)
         {
             if (id == null)
             {
                 return NotFound();
             }
             var getIdea = _context.Ideas.Include(i => i.Submission).Where(s => s.SubmissionId == id);
-            //var data = (from s in _db.Posts select s);
 
-            /*if (page > 0)
-            {
-                page = page;
-            }
-            else
-            {
-                page = 1;
-            }
-            int start = (int)(page - 1) * pageSize;
-
-            ViewBag.pageCurrent = page;
-            int totalPage = getIdea.Count();
-            float totalNumsize = (totalPage / (float)pageSize);
-            int numSize = (int)Math.Ceiling(totalNumsize);
-            ViewBag.numSize = numSize;
-            ViewBag.ideas = getIdea.OrderByDescending(x => x.Id).Skip(start).Take(pageSize);*/
-
-            //var getIdea = _context.Ideas.Include(i => i.Submission).Where(s => s.SubmissionId == id);
-            /*var submission = await _context.Submissions
-                .FirstOrDefaultAsync(m => m.Id == id);*/
 
             ViewData["SubmissionId"] = id;
-            return View(await getIdea.ToListAsync());
+            int pageSize = 5;
+            return View(PaginatedList<Idea>.Create(getIdea.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
         // GET: Admin/Submissions/CreateIdea
         public IActionResult CreateIdea(int submissionId)
@@ -170,10 +129,15 @@ namespace IDS_School.Areas.Admin.Controllers
             }
 
             return View(idea);
+
         }
         //GET: Admin/Submissions/Create
         public IActionResult Create()
         {
+            var localDateTime = DateTime.Now.ToString("MM-dd-yyyy").Replace(' ', 'T');
+
+
+            ViewData["localDateTime"] = localDateTime;
             return View();
         }
 
@@ -318,17 +282,24 @@ namespace IDS_School.Areas.Admin.Controllers
                 .Include(f => f.Files)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            //foreach (var file in idea.Files)
-            //{
-            //    // Load the document from disk.
-            //    var doc1 = file.FilePath;
+            var fileId = (from x in _context.Files
+                        where x.IdeaId == id
+                        select x.Id).FirstOrDefault();
 
-            //    Document doc = new Document(file.FilePath);
-            //    // Save as PDF
-            //    var path = Path.Combine(_env.WebRootPath, Global.PATH_TEMP, Path.GetFileNameWithoutExtension(file.FilePath) + ".pdf");
-            //    doc.Save(path);
-            //    doc1.Save(path);
-            //}
+            var file = (from x in _context.Files
+                        where x.IdeaId == id
+                        select x.FilePath).FirstOrDefault();
+
+            var filePath = file.Split('\\').Last();
+
+            foreach (var fileP in idea.Files)
+            {
+                Document doc = new Document(fileP.FilePath);
+                var path = Path.Combine(_env.WebRootPath, Global.PATH_TEMP, Path.GetFileNameWithoutExtension(fileP.FilePath) + ".pdf");
+                doc.Save(path);
+            }
+                
+
 
             var getReact = await _context.Reactions
                .Where(t => t.IdeaId == id && t.reaction == reaction.Like)
@@ -367,7 +338,8 @@ namespace IDS_School.Areas.Admin.Controllers
             ViewData["countDislike"] = countDislike;
             ViewData["comments"] = comments;
             ViewData["replies"] = replies;
-            //ViewData["files"] = files;
+            ViewData["fileId"] = fileId;
+            ViewData["filePath"] = filePath;
 
 
 
@@ -447,7 +419,7 @@ namespace IDS_School.Areas.Admin.Controllers
                 newComment.UserId = user;
                 newComment.CreatedDate = DateTime.Now;
                 newComment.LastModifiedDate = DateTime.Now;
-                newComment.isAnoymous = isAnoymous;
+                newComment.IsAnoymousComment = isAnoymous;
 
                 _context.Add(newComment);
                 await _context.SaveChangesAsync();
@@ -468,12 +440,19 @@ namespace IDS_School.Areas.Admin.Controllers
                 newReplyComment.UserId = user;
                 newReplyComment.CreatedDate = DateTime.Now;
                 newReplyComment.LastModifiedDate = DateTime.Now;
-                newReplyComment.isAnoymous = isAnoymous;
+                newReplyComment.IsAnoymousReply = isAnoymous;
 
                 _context.Add(newReplyComment);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(DetailIdea), new { id = ideaId });
+        }
+
+        public async Task<IActionResult> DownloadFile(int fileId = -1)
+        {
+            var file = await _context.Files.FindAsync(fileId);
+            byte[] fileBytes = System.IO.File.ReadAllBytes(file.FilePath);
+            return File(fileBytes, MediaTypeNames.Application.Octet, Path.GetFileName(file.FilePath));
         }
     }
 }

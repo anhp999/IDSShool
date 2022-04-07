@@ -33,6 +33,7 @@
     ".NETCoreApp,Version=v5.0": {
       "IDS-School/1.0.0": {
         "dependencies": {
+          "Aspose.Words": "22.4.0",
           "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "5.0.14",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.12",
           "Microsoft.AspNetCore.Identity.UI": "5.0.12",
@@ -326,6 +327,29 @@
         },
         "compile": {
           "IDS-School.dll": {}
+        }
+      },
+      "Aspose.Words/22.4.0": {
+        "dependencies": {
+          "Microsoft.Win32.Registry": "4.7.0",
+          "SkiaSharp": "2.80.1",
+          "System.Reflection.Emit": "4.3.0",
+          "System.Reflection.Emit.ILGeneration": "4.3.0",
+          "System.Text.Encoding.CodePages": "4.7.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Aspose.Words.Pdf2Word.dll": {
+            "assemblyVersion": "22.4.0.0",
+            "fileVersion": "22.4.0.0"
+          },
+          "lib/netstandard2.0/Aspose.Words.dll": {
+            "assemblyVersion": "22.4.0.0",
+            "fileVersion": "22.4.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Aspose.Words.Pdf2Word.dll": {},
+          "lib/netstandard2.0/Aspose.Words.dll": {}
         }
       },
       "Humanizer.Core/2.8.26": {
@@ -1812,6 +1836,42 @@
       "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.1": {},
       "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.1": {},
       "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.1": {},
+      "SkiaSharp/2.80.1": {
+        "dependencies": {
+          "System.Memory": "4.5.4"
+        },
+        "runtime": {
+          "lib/netstandard2.0/SkiaSharp.dll": {
+            "assemblyVersion": "2.80.0.0",
+            "fileVersion": "2.80.1.0"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/osx/native/libSkiaSharp.dylib": {
+            "rid": "osx",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-arm64/native/libSkiaSharp.dll": {
+            "rid": "win-arm64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/libSkiaSharp.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/libSkiaSharp.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/SkiaSharp.dll": {}
+        }
+      },
       "SQLitePCLRaw.bundle_e_sqlite3/2.0.4": {
         "dependencies": {
           "SQLitePCLRaw.core": "2.0.4",
@@ -4841,6 +4901,13 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Aspose.Words/22.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-nghtrgTt0lFmsnhY3OvddKTZUeCSlv9vhx4LPWQ6tV+y9GbLF+23IFIm1NHVlsmwn2YBdERvi7I0Wok793xrug==",
+      "path": "aspose.words/22.4.0",
+      "hashPath": "aspose.words.22.4.0.nupkg.sha512"
+    },
     "Humanizer.Core/2.8.26": {
       "type": "package",
       "serviceable": true,
@@ -5701,6 +5768,13 @@
       "sha512": "sha512-SjraAtZSVwYLpU+pFfSoflen6k9jZ8p7sojFfyXUKprFc7iSN+jjl0qUT1maZBQHv8bAX0nrUaQhZnWsLY8v9w==",
       "path": "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl/4.3.1",
       "hashPath": "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.1.nupkg.sha512"
+    },
+    "SkiaSharp/2.80.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-CiQwnDzG+1JNGzjAN9G/9n/lJgUVA/NPOFgSlEtu6c7qQ0O7P1tMjrXp/+PtWfX0xyyY9ABsFAZK2kW34U7r/A==",
+      "path": "skiasharp/2.80.1",
+      "hashPath": "skiasharp.2.80.1.nupkg.sha512"
     },
     "SQLitePCLRaw.bundle_e_sqlite3/2.0.4": {
       "type": "package",

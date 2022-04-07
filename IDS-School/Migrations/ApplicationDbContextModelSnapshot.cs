@@ -145,14 +145,14 @@ namespace IDS_School.Migrations
                     b.Property<int>("IdeaId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsAnoymousComment")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("isAnoymous")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -299,14 +299,14 @@ namespace IDS_School.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsAnoymousReply")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("isAnoymous")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -325,6 +325,9 @@ namespace IDS_School.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("ClosureDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")

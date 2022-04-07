@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "b2qQxY/Gx/Yv9WLgw4RZwWpllyqiwG6WerIH93BMZurJIFYW+r8rHOeF3Wn0NA6119WHstP5PwKwKYebH3gOkQ==",
+  "dgSpecHash": "X4FPZ2uom5tJRNNufhi93nfmLmqQJjyKTWXLsYrW8YmOymgAuWX/EqhHLMlcniH1qJnVjxThLAffgHZk4wcscg==",
   "success": true,
   "projectFilePath": "D:\\IT\\WebEnterprise\\IDS_School_Group12\\IDS-School\\IDS-School.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Oanh\\.nuget\\packages\\aspose.words\\22.4.0\\aspose.words.22.4.0.nupkg.sha512",
     "C:\\Users\\Oanh\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Oanh\\.nuget\\packages\\libuv\\1.9.1\\libuv.1.9.1.nupkg.sha512",
     "C:\\Users\\Oanh\\.nuget\\packages\\microsoft.aspnetcore\\1.1.2\\microsoft.aspnetcore.1.1.2.nupkg.sha512",
@@ -127,6 +128,7 @@
     "C:\\Users\\Oanh\\.nuget\\packages\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.1\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl.4.3.1.nupkg.sha512",
     "C:\\Users\\Oanh\\.nuget\\packages\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.1\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl.4.3.1.nupkg.sha512",
     "C:\\Users\\Oanh\\.nuget\\packages\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl\\4.3.1\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.1.nupkg.sha512",
+    "C:\\Users\\Oanh\\.nuget\\packages\\skiasharp\\2.80.1\\skiasharp.2.80.1.nupkg.sha512",
     "C:\\Users\\Oanh\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.0.4\\sqlitepclraw.bundle_e_sqlite3.2.0.4.nupkg.sha512",
     "C:\\Users\\Oanh\\.nuget\\packages\\sqlitepclraw.core\\2.0.4\\sqlitepclraw.core.2.0.4.nupkg.sha512",
     "C:\\Users\\Oanh\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.0.4\\sqlitepclraw.lib.e_sqlite3.2.0.4.nupkg.sha512",

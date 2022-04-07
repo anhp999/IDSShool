@@ -1,21 +1,23 @@
-﻿@model IDS_School.Models.Idea
+﻿@model IDS_School.Models.Submission
 
 @{
     ViewData["Title"] = "Create";
+    var localDateTime = ViewData["localDateTime"];
     Layout = "~/Areas/Admin/Views/Shared/_layout_Admin.cshtml";
 }
 
 <div class="content-wrapper">
     <div class="card-header">
-        <h3 class="card-title">Create Idea</h3>
+        <h3 class="card-title">Create Ideas Submission</h3>
     </div>
+    <div style="margin-left:20px; color:red;" class="@(String.IsNullOrEmpty(ViewBag.Error) ? "d-none" : "")">@ViewBag.Error</div>
     <div class="card-body">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -23,50 +25,29 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
+                <label class="control-label">Starting Date</label>
+                <input asp-for="CreatedDate" id="startdate" class="form-control" name="datemin" />
+                <span asp-validation-for="CreatedDate" class="text-danger"></span>
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label asp-for="CategoryId" class="control-label"> Select Category</label>
-                        <select asp-for="CategoryId" asp-items="@ViewBag.CategoryId"></select>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label asp-for="ClosureDate" class="control-label"></label>
+                <input asp-for="ClosureDate" id="date" class="form-control" />
+                <span asp-validation-for="ClosureDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FinalClosureDate" class="control-label"></label>
+                <input asp-for="FinalClosureDate" class="form-control" />
+                <span asp-validation-for="FinalClosureDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-success" />
                 <a asp-action="Index" class="btn btn-primary">Back to list</a>
             </div>
         </form>
-</div>
-</div>
-@*<h1>Create</h1>
-
-<h4>Idea</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <input type="hidden" asp-for="SubmissionId" value="@ViewBag.SubmissionId" />
-
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Details" asp-route-id="@ViewBag.SubmissionId">Back to List</a>
-</div>*@
-
+<script type="text/javascript">
+    $("#startdate").datepicker({
+        
+    });
+</script>
