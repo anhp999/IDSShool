@@ -129,6 +129,42 @@ namespace IDS_School.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("IDS_School.Models.Chat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Chats");
+                });
+
+            modelBuilder.Entity("IDS_School.Models.ChatCUser", b =>
+                {
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("ChatId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatUsers");
+                });
+
             modelBuilder.Entity("IDS_School.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -253,6 +289,32 @@ namespace IDS_School.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Ideas");
+                });
+
+            modelBuilder.Entity("IDS_School.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("IDS_School.Models.Reaction", b =>
@@ -512,6 +574,25 @@ namespace IDS_School.Migrations
                     b.Navigation("Department");
                 });
 
+            modelBuilder.Entity("IDS_School.Models.ChatCUser", b =>
+                {
+                    b.HasOne("IDS_School.Models.Chat", "Chat")
+                        .WithMany("Users")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IDS_School.Models.CUser", "User")
+                        .WithMany("Chats")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("IDS_School.Models.Comment", b =>
                 {
                     b.HasOne("IDS_School.Models.Idea", "Idea")
@@ -549,7 +630,7 @@ namespace IDS_School.Migrations
                         .IsRequired();
 
                     b.HasOne("IDS_School.Models.Submission", "Submission")
-                        .WithMany()
+                        .WithMany("Ideas")
                         .HasForeignKey("SubmissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -565,6 +646,17 @@ namespace IDS_School.Migrations
                     b.Navigation("Submission");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("IDS_School.Models.Message", b =>
+                {
+                    b.HasOne("IDS_School.Models.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
                 });
 
             modelBuilder.Entity("IDS_School.Models.Reaction", b =>
@@ -671,6 +763,8 @@ namespace IDS_School.Migrations
 
             modelBuilder.Entity("IDS_School.Models.CUser", b =>
                 {
+                    b.Navigation("Chats");
+
                     b.Navigation("Comments");
 
                     b.Navigation("Ideas");
@@ -678,6 +772,13 @@ namespace IDS_School.Migrations
                     b.Navigation("Reactions");
 
                     b.Navigation("Views");
+                });
+
+            modelBuilder.Entity("IDS_School.Models.Chat", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("IDS_School.Models.Comment", b =>
@@ -699,6 +800,11 @@ namespace IDS_School.Migrations
                     b.Navigation("Reactions");
 
                     b.Navigation("Views");
+                });
+
+            modelBuilder.Entity("IDS_School.Models.Submission", b =>
+                {
+                    b.Navigation("Ideas");
                 });
 #pragma warning restore 612, 618
         }

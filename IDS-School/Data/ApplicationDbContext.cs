@@ -13,6 +13,17 @@ namespace IDS_School.Data
             : base(options)
         {
         }
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<ChatCUser> ChatUsers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<ChatCUser>()
+                .HasKey(x => new { x.ChatId, x.UserId });
+        }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Idea> Ideas { get; set; }
         public DbSet<File> Files { get; set; }

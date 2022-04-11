@@ -107,63 +107,116 @@
                         <a class="d-block" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a>
                     </div>
                 </div>
-
-                <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-    with font-awesome or any other icon font library -->
-                        <li class="nav-item menu">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-users"></i>
-                                <p>
-                                    Department
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a asp-area="" asp-controller="Admin" asp-action="Departments" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>List Departments</p>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item menu">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-users"></i>
+                                        <p>
+                                            Department
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="Admin" asp-action="Departments" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>List Departments</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item menu">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-users-cog"></i>
+                                        <p>
+                                            Role
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="Admin" asp-action="Role" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>List Role</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item menu">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-user-friends"></i>
+                                        <p>
+                                            User
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="Admin" asp-action="User" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>List User</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item menu">
+                                    <a asp-area="" asp-controller="Admin" asp-action="Charts" class="nav-link">
+                                        <i class="nav-icon fas fa-chart-bar"></i>
+                                        <p>
+                                            Charts
+                                        </p>
                                     </a>
                                 </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item menu">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-layer-group"></i>
-                                <p>
-                                    Category
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a asp-area="" asp-controller="Admin" asp-action="Categories" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>List Categories</p>
+                            }
+                            @if (User.IsInRole("Coordinator"))
+                            {
+                                <li class="nav-item menu">
+                                    <a asp-area="" asp-controller="Admin" asp-action="Charts" class="nav-link">
+                                        <i class="nav-icon fas fa-chart-bar"></i>
+                                        <p>
+                                            Charts
+                                        </p>
                                     </a>
                                 </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item menu">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-users-cog"></i>
-                                <p>
-                                    Role
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a asp-area="" asp-controller="Admin" asp-action="Role" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>List Role</p>
+                            }
+                            @if (User.IsInRole("Manager"))
+                            {
+                                <li class="nav-item menu">
+                                    <a asp-area="" asp-controller="Admin" asp-action="Charts" class="nav-link">
+                                        <i class="nav-icon fas fa-chart-bar"></i>
+                                        <p>
+                                            Charts
+                                        </p>
                                     </a>
                                 </li>
-                            </ul>
-                        </li>
+                                <li class="nav-item menu">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-layer-group"></i>
+                                        <p>
+                                            Category
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="Admin" asp-action="Categories" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>List Categories</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (User.IsInRole("Staff"))
+                            {
+                            }
+                        }
                         <li class="nav-item menu">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-paper-plane"></i>
@@ -182,10 +235,10 @@
                             </ul>
                         </li>
                     </ul>
-                </nav>
-                <!-- /.sidebar-menu -->
+                    </nav>
+
             </div>
-            <!-- /.sidebar -->
+
         </aside>
 
         @RenderBody();
@@ -213,6 +266,8 @@
     <script>
         $.widget.bridge('uibutton', $.ui.button)
     </script>
+    @*<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="~/js/site.js"></script>*@
     <!-- Bootstrap 4 -->
     <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- ChartJS -->

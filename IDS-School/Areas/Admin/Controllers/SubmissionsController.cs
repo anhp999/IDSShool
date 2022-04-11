@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 //using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +23,7 @@ using Comment = IDS_School.Models.Comment;
 
 namespace IDS_School.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Area("Admin")]
     public class SubmissionsController : Controller
     {
@@ -47,8 +51,8 @@ namespace IDS_School.Areas.Admin.Controllers
             }
             var getIdea = _context.Ideas.Include(i => i.Submission).Where(s => s.SubmissionId == id);
 
-
             ViewData["SubmissionId"] = id;
+
             int pageSize = 5;
             return View(PaginatedList<Idea>.Create(getIdea.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
@@ -103,14 +107,15 @@ namespace IDS_School.Areas.Admin.Controllers
                 {
                     string webRootPath = _env.WebRootPath;
                     var path = Path.Combine(webRootPath, Global.PATH_TOPIC, newIdea.SubmissionId.ToString());
-
+                    string result = Path.GetRandomFileName();
                     if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
-
                     // Upload file
-                    path = Path.Combine(path, String.Format("{0}.{1:yyyy-MM-dd.ss-mm-HH}{2}", user, DateTime.Now, fileExtension));
+                    //path = Path.Combine(path, String.Format("{0}.{1:yyyy-MM-dd.ss-mm-HH}{2}", user, "",fileExtension));
+                    path = Path.Combine(path, String.Format("{0}.{1}{2}", user, result, fileExtension));
                     using var stream = new FileStream(path, FileMode.Create);
                     file.CopyTo(stream);
 
+                    //upload to database
                     // var newFile = new FileStream(path, FileMode.Create);
                     var newFile = new Models.File();
                     newFile.IdeaId = newIdea.Id;
@@ -122,56 +127,77 @@ namespace IDS_School.Areas.Admin.Controllers
                     _context.Add(newFile);
                     await _context.SaveChangesAsync();
                 }
+                var sendEmailUser = _context.Users.FirstOrDefault(i => i.Id == user.ToString());
+                SendMail(sendEmailUser.Email, "Submit Ideal Success", "Thank you for your idea");
+                SendMail("nguyenhaithaonhi3g@gmail.com", "Idea submit by Staff", "There is an idea that has been initiated by a user");
             }
             else
             {
-                return RedirectToAction(nameof(Details), new SelectList(_context.Submissions, "Id", "Id", idea.SubmissionId));
+                return RedirectToAction(nameof(Details), new { id = idea.SubmissionId });
             }
 
-            return View(idea);
+            return RedirectToAction(nameof(Details), new { id = idea.SubmissionId });
 
         }
+        public void SendMail(string Mailto, string subject, string boddy)
+        {
+            var smtpacountJson = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("MailSettings")["Mail"];
+            var smtppasswordJson = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("MailSettings")["Password"];
+
+            String mailgui = smtpacountJson.ToString();
+            string smtpacount = smtpacountJson.ToString();
+            string smtppassword = smtppasswordJson.ToString();
+
+            MailUtils.MailUtils.SendMailGoogleSmtp(
+                mailgui,
+                Mailto,
+                subject,
+                boddy,
+                smtpacount,
+                smtppassword
+
+            ).Wait();
+        }
+
         //GET: Admin/Submissions/Create
         public IActionResult Create()
         {
-            var localDateTime = DateTime.Now.ToString("MM-dd-yyyy").Replace(' ', 'T');
-
-
-            ViewData["localDateTime"] = localDateTime;
-            return View();
+            var model = new Submission
+            {
+                CreatedDate = DateTime.Today,
+            };
+            return View(model);
         }
 
         // POST: Admin/Submissions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Submission submission)
         {
-            if (ModelState.IsValid)
+
+            if (submission.ClosureDate <= submission.FinalClosureDate)
             {
-                if (submission.ClosureDate <= submission.FinalClosureDate)
-                {
-                    //submission.CreationDay = DateTime.Now;
+                //submission.CreationDay = DateTime.Now;
 
-                    _context.Add(submission);
-                    await _context.SaveChangesAsync();
+                _context.Add(submission);
+                await _context.SaveChangesAsync();
 
-                    var folderName = submission.Id.ToString();
+                var folderName = submission.Id.ToString();
 
-                    var path = Path.Combine(Global.PATH_TOPIC, folderName);
+                var path = Path.Combine(Global.PATH_TOPIC, folderName);
 
-                    if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+                if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
 
-                    return RedirectToAction(nameof(Index));
-                }
-                ViewData["Error"] = "Final Closure Date is not acceptable.";
+                return RedirectToAction(nameof(Index));
             }
+            ViewData["Error"] = "Final Closure Date is not acceptable.";
+
 
             return View(submission);
         }
 
-        // GET: Admin/Submissions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -180,11 +206,19 @@ namespace IDS_School.Areas.Admin.Controllers
             }
 
             var submission = await _context.Submissions.FindAsync(id);
+            var model = new Submission
+            {
+                Name = submission.Name,
+                Description = submission.Description,
+                ClosureDate = submission.ClosureDate,
+                FinalClosureDate = submission.FinalClosureDate,
+            };
+
             if (submission == null)
             {
                 return NotFound();
             }
-            return View(submission);
+            return View(model);
         }
 
         // POST: Admin/Submissions/Edit/5
@@ -225,6 +259,65 @@ namespace IDS_School.Areas.Admin.Controllers
                 ViewData["Error"] = "Final Closure Date is not acceptable.";
             }
             return View(submission);
+        }
+
+        // GET: Staff/Ideas/Edit/5
+        public async Task<IActionResult> EditIdea(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var idea = await _context.Ideas.FindAsync(id);
+            if (idea == null)
+            {
+                return NotFound();
+            }
+            return View(idea);
+        }
+
+        // POST: IdeasController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditIdea(int id, Idea idea)
+        {
+            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            idea.UserId = user;
+            var createdated = idea.CreatedDate;
+            var categoryid = idea.CategoryId;
+            var sumissionid = idea.SubmissionId;
+            if (id != idea.Id)
+            {
+                return NotFound();
+            }
+            try
+            {
+                Idea newIdea = new()
+                {
+                    UserId = user,
+                    CreatedDate = createdated,
+                    LastModifiedDate = DateTime.Now,
+                    Title = idea.Title,
+                    Description = idea.Description,
+                    Content = idea.Content,
+                    SubmissionId = sumissionid,
+                    CategoryId = categoryid
+                };
+                _context.Update(newIdea);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!IdeaExists(idea.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Admin/Submissions/Delete/5
@@ -275,16 +368,19 @@ namespace IDS_School.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var idea = await _context.Ideas
                 .Include(r => r.Reactions)
                 .Include(c => c.Comments)
                 .Include(f => f.Files)
+                .Include(s => s.Submission)
+                .Include(u => u.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            string userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var fileId = (from x in _context.Files
-                        where x.IdeaId == id
-                        select x.Id).FirstOrDefault();
+                          where x.IdeaId == id
+                          select x.Id).FirstOrDefault();
 
             var file = (from x in _context.Files
                         where x.IdeaId == id
@@ -292,13 +388,12 @@ namespace IDS_School.Areas.Admin.Controllers
 
             var filePath = file.Split('\\').Last();
 
-            foreach (var fileP in idea.Files)
-            {
-                Document doc = new Document(fileP.FilePath);
-                var path = Path.Combine(_env.WebRootPath, Global.PATH_TEMP, Path.GetFileNameWithoutExtension(fileP.FilePath) + ".pdf");
-                doc.Save(path);
-            }
-                
+            //foreach (var fileP in idea.Files)
+            //{
+            //    Document doc = new Document(fileP.FilePath);
+            //    var path = Path.Combine(_env.WebRootPath, Global.PATH_TEMP, Path.GetFileNameWithoutExtension(fileP.FilePath) + ".pdf");
+            //    doc.Save(path);
+            //}
 
 
             var getReact = await _context.Reactions
@@ -312,12 +407,6 @@ namespace IDS_School.Areas.Admin.Controllers
               .ToListAsync();
             int countLike = getReact.Count;
             int countDislike = getReact2.Count;
-
-            //List<Models.File> files = null;
-            //files = await _context.Files
-            //    .Where(i => i.IdeaId == id)
-            //    .OrderBy(c => c.CreatedDate)
-            //    .ToListAsync();
 
             List<Comment> comments = null;
             comments = await _context.Comments
@@ -340,7 +429,7 @@ namespace IDS_School.Areas.Admin.Controllers
             ViewData["replies"] = replies;
             ViewData["fileId"] = fileId;
             ViewData["filePath"] = filePath;
-
+            ViewData["userid"] = userid;
 
 
 
@@ -352,6 +441,7 @@ namespace IDS_School.Areas.Admin.Controllers
 
             return View(idea);
         }
+
         // POST: IdeasController/Like/10
         [HttpPost, ActionName("Like")]
         [ValidateAntiForgeryToken]
@@ -454,5 +544,40 @@ namespace IDS_School.Areas.Admin.Controllers
             byte[] fileBytes = System.IO.File.ReadAllBytes(file.FilePath);
             return File(fileBytes, MediaTypeNames.Application.Octet, Path.GetFileName(file.FilePath));
         }
+        public async Task<IActionResult> ViewIdea(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var existView = (from x in _context.Views
+                             where x.IdeaId == id && x.UserId == user
+                             select x).FirstOrDefault();
+            if (existView == null)
+            {
+                View newView = new()
+                {
+                    UserId = user,
+                    IdeaId = (int)id,
+                    LastVisitedDate = DateTime.Now
+                };
+                _context.Add(newView);
+                await _context.SaveChangesAsync();
+            }
+            else if (existView != null && existView.UserId == user)
+            {
+                existView.LastVisitedDate = DateTime.Now;
+                _context.Update(existView);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(DetailIdea), new { id });
+        }
+        private bool IdeaExists(int id)
+        {
+            return _context.Ideas.Any(e => e.Id == id);
+        }
     }
+
 }

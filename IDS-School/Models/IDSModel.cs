@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using IDS_School.Service;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace IDS_School.Models
 {
+    public enum UserRole { Admin, Member, Guest }
+    public enum ChatType { Room, Private }
+
     public enum reaction { Like, Dislike ,Love, Care, HaHa, Wow, Sad, Angry }
     public enum Gender { Male, Female, Other }
     public enum FileType { doc, docx, img, Document}
@@ -25,6 +29,12 @@ namespace IDS_School.Models
 
     public class CUser : IdentityUser
     {
+        public CUser() : base()
+        {
+            Chats = new List<ChatCUser>();
+        }
+        public ICollection<ChatCUser> Chats { get; set; }
+
         [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
@@ -127,6 +137,7 @@ namespace IDS_School.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CreatedDate { get; set; }
 
@@ -135,6 +146,8 @@ namespace IDS_School.Models
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FinalClosureDate { get; set; }
+
+        public virtual ICollection<Idea> Ideas { get; set; }
     }
     public class View
     {
@@ -203,5 +216,41 @@ namespace IDS_School.Models
         public int CommentId { get; set; }
         public virtual Comment Comment { get; set; }
 
+    }
+
+    /// <summary>
+    ///  Tạo chat 
+    /// </summary>
+    public class Chat
+    {
+        public Chat()
+        {
+            Messages = new List<Message>();
+            Users = new List<ChatCUser>();
+        }
+
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public ChatType Type { get; set; }
+        public ICollection<Message> Messages { get; set; }
+        public ICollection<ChatCUser> Users { get; set; }
+    }
+    public class ChatCUser
+    {
+        public string UserId { get; set; }
+        public CUser User { get; set; }
+        public int ChatId { get; set; }
+        public Chat Chat { get; set; }
+        public UserRole Role { get; set; }
+    }
+    public class Message
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Text { get; set; }
+        public DateTime Timestamp { get; set; }
+
+        public int ChatId { get; set; }
+        public Chat Chat { get; set; }
     }
 }
