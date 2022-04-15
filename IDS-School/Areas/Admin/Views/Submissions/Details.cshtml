@@ -51,7 +51,7 @@
                                         <td class="col-5"> @Html.DisplayFor(modelItem => item.LastModifiedDate)</td>
                                         <td class="col-2">
                                             <a asp-action="DetailIdea" asp-route-id="@item.Id" class="btn btn-primary" placeholder="Detail"> <i class="fa fa-eye" aria-hidden="true"></i></a>
-                                            <a asp-action="ViewIdea" asp-route-id="@item.Id" hidden ></a>
+                                            @*<a asp-action="ViewIdea" asp-route-id="@item.Id" hidden ></a>*@
                                         </td>
                                     </tr>
                                 }
@@ -139,7 +139,7 @@ else
     <div class="content-wrapper">
         <div class="card-header">
             <div class="alert alert-warning" role="alert">
-                None Idea Right Now. <a asp-action="CreateIdea" asp-route-submissionid="@ViewBag.SubmissionId" class="btn btn-success btn-sm" style="width: 50px;">Create One Here !</a>
+                None Idea Right Now. <a asp-action="CreateIdea" asp-route-submissionid="@ViewBag.SubmissionId"  style="width: 50px;">Create One Here !</a>
             </div>
         </div>
     </div>

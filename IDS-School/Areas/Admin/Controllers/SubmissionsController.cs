@@ -375,7 +375,10 @@ namespace IDS_School.Areas.Admin.Controllers
                 .Include(f => f.Files)
                 .Include(s => s.Submission)
                 .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id);            
+
+            
+
             string userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var fileId = (from x in _context.Files
@@ -431,14 +434,30 @@ namespace IDS_School.Areas.Admin.Controllers
             ViewData["filePath"] = filePath;
             ViewData["userid"] = userid;
 
-
-
-
             if (idea == null)
             {
                 return NotFound();
             }
-
+            var existView = (from x in _context.Views
+                             where x.IdeaId == id && x.UserId == user
+                             select x).FirstOrDefault();
+            if (existView == null)
+            {
+                View newView = new()
+                {
+                    UserId = user,
+                    IdeaId = (int)id,
+                    LastVisitedDate = DateTime.Now
+                };
+                _context.Add(newView);
+                await _context.SaveChangesAsync();
+            }
+            else if (existView != null && existView.UserId == user)
+            {
+                existView.LastVisitedDate = DateTime.Now;
+                _context.Update(existView);
+                await _context.SaveChangesAsync();
+            }
             return View(idea);
         }
 
@@ -450,7 +469,7 @@ namespace IDS_School.Areas.Admin.Controllers
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var idea = await _context.Ideas.FindAsync(ideaId);
             var oldArticle = (from x in _context.Reactions
-                              where x.UserId == user
+                              where x.UserId == user && x.IdeaId == ideaId
                               select x).FirstOrDefault();
             if (oldArticle == null && getReaction == reaction.Like)
             {
@@ -544,36 +563,36 @@ namespace IDS_School.Areas.Admin.Controllers
             byte[] fileBytes = System.IO.File.ReadAllBytes(file.FilePath);
             return File(fileBytes, MediaTypeNames.Application.Octet, Path.GetFileName(file.FilePath));
         }
-        public async Task<IActionResult> ViewIdea(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //public async Task<IActionResult> ViewIdea(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var existView = (from x in _context.Views
-                             where x.IdeaId == id && x.UserId == user
-                             select x).FirstOrDefault();
-            if (existView == null)
-            {
-                View newView = new()
-                {
-                    UserId = user,
-                    IdeaId = (int)id,
-                    LastVisitedDate = DateTime.Now
-                };
-                _context.Add(newView);
-                await _context.SaveChangesAsync();
-            }
-            else if (existView != null && existView.UserId == user)
-            {
-                existView.LastVisitedDate = DateTime.Now;
-                _context.Update(existView);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction(nameof(DetailIdea), new { id });
-        }
+        //    var existView = (from x in _context.Views
+        //                     where x.IdeaId == id && x.UserId == user
+        //                     select x).FirstOrDefault();
+        //    if (existView == null)
+        //    {
+        //        View newView = new()
+        //        {
+        //            UserId = user,
+        //            IdeaId = (int)id,
+        //            LastVisitedDate = DateTime.Now
+        //        };
+        //        _context.Add(newView);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    else if (existView != null && existView.UserId == user)
+        //    {
+        //        existView.LastVisitedDate = DateTime.Now;
+        //        _context.Update(existView);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    return RedirectToAction(nameof(DetailIdea), new { id });
+        //}
         private bool IdeaExists(int id)
         {
             return _context.Ideas.Any(e => e.Id == id);

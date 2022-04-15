@@ -55,6 +55,7 @@ namespace IDS_School.Areas.Admin.Controllers
             }
 
             var user = await _context.Users.FindAsync(id);
+            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Name"); ;
             if (user == null)
             {
                 return NotFound();

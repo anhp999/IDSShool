@@ -366,7 +366,7 @@ namespace IDS_School.Areas.Staff.Controllers
             ViewData["replies"] = replies;
             ViewData["fileId"] = fileId;
             ViewData["filePath"] = filePath;
-            ViewData["useridF"] = userid;        
+            ViewData["userid"] = userid;        
 
 
 

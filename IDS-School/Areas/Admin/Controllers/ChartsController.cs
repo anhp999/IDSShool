@@ -70,8 +70,8 @@ namespace IDS_School.Areas.Admin.Controllers
         {
             var data = _context.Ideas.Where(i => i.Id == id).Select(c => new
             {
-                like = c.Reactions.Select(l => l.reaction == reaction.Like).Count(),
-                dislike = c.Reactions.Select(d => d.reaction == reaction.Dislike).Count(),
+                like = c.Reactions.Where(i => i.reaction == reaction.Like).Select(l => l.reaction == reaction.Like).Count(),
+                dislike = c.Reactions.Where(i => i.reaction == reaction.Dislike).Select(d => d.reaction == reaction.Dislike).Count(),
                 comment = c.Comments.Count,
                 replies = c.Comments.Select(r => r.Replies.Where(w => w.CommentId==id)).Count(), 
                 view = c.Views.Count

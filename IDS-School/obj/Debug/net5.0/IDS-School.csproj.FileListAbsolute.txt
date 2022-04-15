@@ -1,4 +1,3 @@
-D:\IT\WebEnterprise\IDS_School_Group12\IDS-School\obj\Debug\net5.0\IDS-School.csproj.AssemblyReference.cache
 D:\IT\WebEnterprise\IDS_School_Group12\IDS-School\obj\Debug\net5.0\IDS-School.GeneratedMSBuildEditorConfig.editorconfig
 D:\IT\WebEnterprise\IDS_School_Group12\IDS-School\obj\Debug\net5.0\IDS-School.AssemblyInfoInputs.cache
 D:\IT\WebEnterprise\IDS_School_Group12\IDS-School\obj\Debug\net5.0\IDS-School.AssemblyInfo.cs
@@ -305,3 +304,4 @@ D:\IT\WebEnterprise\IDS_School_Group12\IDS-School\obj\Debug\net5.0\Razor\Areas\C
 D:\IT\WebEnterprise\IDS_School_Group12\IDS-School\obj\Debug\net5.0\Razor\Areas\Manager\Views\Charts\Details.cshtml.g.cs
 D:\IT\WebEnterprise\IDS_School_Group12\IDS-School\obj\Debug\net5.0\Razor\Areas\Manager\Views\Charts\Index.cshtml.g.cs
 D:\IT\WebEnterprise\IDS_School_Group12\IDS-School\obj\Debug\net5.0\Razor\Areas\Manager\Views\Submissions\EditIdea.cshtml.g.cs
+D:\IT\WebEnterprise\IDS_School_Group12\IDS-School\obj\Debug\net5.0\IDS-School.csproj.AssemblyReference.cache

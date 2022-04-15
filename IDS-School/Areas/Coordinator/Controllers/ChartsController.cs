@@ -70,17 +70,12 @@ namespace IDS_School.Areas.Coordinator.Controllers
         {
             var data = _context.Ideas.Where(i => i.Id == id).Select(c => new
             {
-                like = c.Reactions.Select(l => l.reaction == reaction.Like).Count(),
-                dislike = c.Reactions.Select(d => d.reaction == reaction.Dislike).Count(),
+                like = c.Reactions.Where(l=>l.reaction == reaction.Like).Select(l => l.reaction == reaction.Like).Count(),
+                dislike = c.Reactions.Where(d => d.reaction == reaction.Dislike).Select(d => d.reaction == reaction.Dislike).Count(),
                 comment = c.Comments.Count,
                 replies = c.Comments.Select(r => r.Replies.Where(w => w.CommentId==id)).Count(), 
                 view = c.Views.Count
             }).ToList();
-
-            //new
-            //{
-            //    reply = r.Replies.Where(t => t.Comment.IdeaId == id).Select(r => r.Comment.Replies).Count()
-            //}),
             var result = data.Select(s => s.comment == 0 && s.dislike == 0 && s.like == 0 && s.replies == 0 && s.view == 0).FirstOrDefault() == true ? null : data;
             var jsonList = JsonSerializer.Serialize(result);
             return Json(new {JSONList = jsonList });

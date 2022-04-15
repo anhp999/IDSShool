@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Chat>
+﻿@*@model IEnumerable<Chat>
 
 <div class="side-menu">
     @foreach (var chat in Model)
@@ -6,6 +6,16 @@
         <a class="room-button" asp-controller="HomeChat" asp-action="Chat" asp-route-id="@chat.Id">
             @chat.Name
         </a>}
+
+    <a class="room-button" id="create-room-btn" href="#">
+        <strong>+</strong>
+    </a>
+</div>*@
+<div class="side-menu">
+
+    <a class="room-button" href="#">
+        Room
+    </a>
 
     <a class="room-button" id="create-room-btn" href="#">
         <strong>+</strong>

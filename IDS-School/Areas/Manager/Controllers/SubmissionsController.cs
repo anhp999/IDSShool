@@ -421,7 +421,7 @@ namespace IDS_School.Areas.Manager.Controllers
             ViewData["replies"] = replies;
             ViewData["fileId"] = fileId;
             ViewData["filePath"] = filePath;
-            ViewData["useridF"] = userid;
+            ViewData["userid"] = userid;
 
 
 
@@ -429,6 +429,26 @@ namespace IDS_School.Areas.Manager.Controllers
             if (idea == null)
             {
                 return NotFound();
+            }
+            var existView = (from x in _context.Views
+                             where x.IdeaId == id && x.UserId == user
+                             select x).FirstOrDefault();
+            if (existView == null)
+            {
+                View newView = new()
+                {
+                    UserId = user,
+                    IdeaId = (int)id,
+                    LastVisitedDate = DateTime.Now
+                };
+                _context.Add(newView);
+                await _context.SaveChangesAsync();
+            }
+            else if (existView != null && existView.UserId == user)
+            {
+                existView.LastVisitedDate = DateTime.Now;
+                _context.Update(existView);
+                await _context.SaveChangesAsync();
             }
 
             return View(idea);
@@ -536,36 +556,7 @@ namespace IDS_School.Areas.Manager.Controllers
             byte[] fileBytes = System.IO.File.ReadAllBytes(file.FilePath);
             return File(fileBytes, MediaTypeNames.Application.Octet, Path.GetFileName(file.FilePath));
         }
-        public async Task<IActionResult> ViewIdea(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var existView = (from x in _context.Views
-                             where x.IdeaId == id && x.UserId == user
-                             select x).FirstOrDefault();
-            if (existView == null)
-            {
-                View newView = new()
-                {
-                    UserId = user,
-                    IdeaId = (int)id,
-                    LastVisitedDate = DateTime.Now
-                };
-                _context.Add(newView);
-                await _context.SaveChangesAsync();
-            }
-            else if (existView != null && existView.UserId == user)
-            {
-                existView.LastVisitedDate = DateTime.Now;
-                _context.Update(existView);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction(nameof(DetailIdea), new { id });
-        }
+        
         private bool IdeaExists(int id)
         {
             return _context.Ideas.Any(e => e.Id == id);

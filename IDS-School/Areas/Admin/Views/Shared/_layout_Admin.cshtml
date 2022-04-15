@@ -173,22 +173,56 @@
                                         </p>
                                     </a>
                                 </li>
+                                <li class="nav-item menu">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-paper-plane"></i>
+                                        <p>
+                                            Submission
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="Admin" asp-action="Submissions" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>List Submission</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
                             }
                             @if (User.IsInRole("Coordinator"))
                             {
                                 <li class="nav-item menu">
-                                    <a asp-area="" asp-controller="Admin" asp-action="Charts" class="nav-link">
+                                    <a asp-area="" asp-controller="Coordinator" asp-action="Charts" class="nav-link">
                                         <i class="nav-icon fas fa-chart-bar"></i>
                                         <p>
                                             Charts
                                         </p>
                                     </a>
                                 </li>
+                                <li class="nav-item menu">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-paper-plane"></i>
+                                        <p>
+                                            Submission
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="Coordinator" asp-action="Submissions" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>List Submission</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
                             }
                             @if (User.IsInRole("Manager"))
                             {
                                 <li class="nav-item menu">
-                                    <a asp-area="" asp-controller="Admin" asp-action="Charts" class="nav-link">
+                                    <a asp-area="" asp-controller="Manager" asp-action="Charts" class="nav-link">
                                         <i class="nav-icon fas fa-chart-bar"></i>
                                         <p>
                                             Charts
@@ -205,9 +239,26 @@
                                     </a>
                                     <ul class="nav nav-treeview">
                                         <li class="nav-item">
-                                            <a asp-area="" asp-controller="Admin" asp-action="Categories" class="nav-link">
+                                            <a asp-area="" asp-controller="Manager" asp-action="Categories" class="nav-link">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>List Categories</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item menu">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-paper-plane"></i>
+                                        <p>
+                                            Submission
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="Manager" asp-action="Submissions" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>List Submission</p>
                                             </a>
                                         </li>
                                     </ul>
@@ -215,25 +266,26 @@
                             }
                             @if (User.IsInRole("Staff"))
                             {
+                                <li class="nav-item menu">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-paper-plane"></i>
+                                        <p>
+                                            Submission
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="Staff" asp-action="Submissions" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>List Submission</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
                             }
                         }
-                        <li class="nav-item menu">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-paper-plane"></i>
-                                <p>
-                                    Submission
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a asp-area="" asp-controller="Admin" asp-action="Submissions" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>List Submission</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+
                     </ul>
                     </nav>
 
